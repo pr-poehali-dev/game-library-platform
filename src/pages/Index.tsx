@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,9 +20,26 @@ const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({ name: '', email: '', avatar: '' });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   const featuredGames = [
     {
@@ -55,9 +72,9 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 dark:from-background dark:to-muted/10">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
+      <header className="bg-background/80 backdrop-blur-md border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 md:space-x-8">
@@ -68,7 +85,7 @@ const Index = () => {
                     <Icon name="Settings" size={20} />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-md w-[95vw] max-w-[425px] mx-4 sm:mx-auto rounded-2xl">
                   <DialogHeader>
                     <DialogTitle>Настройки</DialogTitle>
                     <DialogDescription>
@@ -134,10 +151,10 @@ const Index = () => {
                 Gaming Library
               </h1>
               <nav className="hidden lg:flex space-x-6">
-                <a href="#" className="text-gray-700 hover:text-primary transition-colors">Главная</a>
-                <a href="#" className="text-gray-700 hover:text-primary transition-colors">Поиск</a>
-                <a href="#" className="text-gray-700 hover:text-primary transition-colors">Магазин</a>
-                <a href="#" className="text-gray-700 hover:text-primary transition-colors">Для разработчиков</a>
+                <a href="/" className="text-muted-foreground hover:text-primary transition-colors">Главная</a>
+                <a href="/search" className="text-muted-foreground hover:text-primary transition-colors">Поиск</a>
+                <a href="/store" className="text-muted-foreground hover:text-primary transition-colors">Магазин</a>
+                <a href="/developers" className="text-muted-foreground hover:text-primary transition-colors">Для разработчиков</a>
               </nav>
             </div>
 
@@ -155,19 +172,19 @@ const Index = () => {
                   </SheetHeader>
                   <div className="mt-6 space-y-4">
                     <nav className="space-y-2">
-                      <a href="#" className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                      <a href="/" className="block px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors">
                         <Icon name="Home" size={18} className="inline mr-3" />
                         Главная
                       </a>
-                      <a href="#" className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                      <a href="/search" className="block px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors">
                         <Icon name="Search" size={18} className="inline mr-3" />
                         Поиск
                       </a>
-                      <a href="#" className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                      <a href="/store" className="block px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors">
                         <Icon name="ShoppingBag" size={18} className="inline mr-3" />
                         Магазин
                       </a>
-                      <a href="#" className="block px-3 py-2 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg transition-colors">
+                      <a href="/developers" className="block px-3 py-2 text-muted-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-colors">
                         <Icon name="Code" size={18} className="inline mr-3" />
                         Для разработчиков
                       </a>
@@ -182,7 +199,7 @@ const Index = () => {
                           </Avatar>
                           <div>
                             <p className="text-sm font-medium">{user.name}</p>
-                            <p className="text-xs text-gray-500">{user.email}</p>
+                            <p className="text-xs text-muted-foreground">{user.email}</p>
                           </div>
                         </div>
                         <Button
@@ -233,7 +250,7 @@ const Index = () => {
                       Войти
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md mx-4">
+                  <DialogContent className="sm:max-w-md w-[95vw] max-w-[425px] mx-4 sm:mx-auto rounded-2xl">
                     <DialogHeader>
                       <DialogTitle>
                         {isRegistering ? 'Создать аккаунт' : 'Войти в аккаунт'}
@@ -330,14 +347,14 @@ const Index = () => {
               игровых проектов
             </span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8 px-4">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 md:mb-8 px-4">
             Платформа для разработчиков и игроков. Размещайте свои игры, демо-версии и ассеты. Находите уникальные проекты.
           </p>
           
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto relative px-4">
             <div className="relative">
-              <Icon name="Search" size={18} className="absolute left-6 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Icon name="Search" size={18} className="absolute left-6 md:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Найти игры, ассеты, разработчиков..."
@@ -357,7 +374,7 @@ const Index = () => {
       {/* Content Tabs */}
       <section className="container mx-auto px-4 py-6 md:py-8">
         <Tabs defaultValue="games" className="w-full">
-          <TabsList className="grid w-full max-w-xs sm:max-w-md mx-auto grid-cols-4 rounded-full p-1 bg-gray-100 text-xs sm:text-sm">
+          <TabsList className="grid w-full max-w-xs sm:max-w-md mx-auto grid-cols-4 rounded-full p-1 bg-muted/50 text-xs sm:text-sm">
             <TabsTrigger value="games" className="rounded-full px-2 sm:px-4">Игры</TabsTrigger>
             <TabsTrigger value="demos" className="rounded-full px-2 sm:px-4">Демо</TabsTrigger>
             <TabsTrigger value="assets" className="rounded-full px-2 sm:px-4">Ассеты</TabsTrigger>
@@ -390,7 +407,7 @@ const Index = () => {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {featuredGames.map((game) => (
-                  <Card key={game.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 bg-white/50 backdrop-blur-sm touch-manipulation">
+                  <Card key={game.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-card/50 backdrop-blur-sm touch-manipulation">
                     <div className="relative">
                       <img 
                         src={game.image} 
@@ -399,7 +416,7 @@ const Index = () => {
                         loading="lazy"
                       />
                       <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
-                        <Badge variant="secondary" className="bg-white/90 text-gray-800 text-xs">
+                        <Badge variant="secondary" className="bg-card/90 text-xs">
                           {game.price}
                         </Badge>
                       </div>
@@ -408,7 +425,7 @@ const Index = () => {
                       <div className="flex items-start justify-between">
                         <div className="min-w-0 flex-1">
                           <CardTitle className="text-base sm:text-lg truncate">{game.title}</CardTitle>
-                          <CardDescription className="text-xs sm:text-sm text-gray-600 mt-1 truncate">
+                          <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">
                             от {game.developer}
                           </CardDescription>
                         </div>
@@ -446,28 +463,28 @@ const Index = () => {
 
             <TabsContent value="demos" className="space-y-6">
               <div className="text-center py-8 sm:py-12">
-                <Icon name="Gamepad2" size={48} className="sm:hidden mx-auto text-gray-300 mb-4" />
-                <Icon name="Gamepad2" size={64} className="hidden sm:block mx-auto text-gray-300 mb-4" />
+                <Icon name="Gamepad2" size={48} className="sm:hidden mx-auto text-muted-foreground mb-4" />
+                <Icon name="Gamepad2" size={64} className="hidden sm:block mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-xl sm:text-2xl font-semibold mb-2">Демо-версии</h3>
-                <p className="text-sm sm:text-base text-gray-600 px-4">Попробуйте игры перед покупкой</p>
+                <p className="text-sm sm:text-base text-muted-foreground px-4">Попробуйте игры перед покупкой</p>
               </div>
             </TabsContent>
 
             <TabsContent value="assets" className="space-y-6">
               <div className="text-center py-8 sm:py-12">
-                <Icon name="Package" size={48} className="sm:hidden mx-auto text-gray-300 mb-4" />
-                <Icon name="Package" size={64} className="hidden sm:block mx-auto text-gray-300 mb-4" />
+                <Icon name="Package" size={48} className="sm:hidden mx-auto text-muted-foreground mb-4" />
+                <Icon name="Package" size={64} className="hidden sm:block mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-xl sm:text-2xl font-semibold mb-2">Игровые ассеты</h3>
-                <p className="text-sm sm:text-base text-gray-600 px-4">Спрайты, звуки, модели и другие ресурсы</p>
+                <p className="text-sm sm:text-base text-muted-foreground px-4">Спрайты, звуки, модели и другие ресурсы</p>
               </div>
             </TabsContent>
 
             <TabsContent value="tools" className="space-y-6">
               <div className="text-center py-8 sm:py-12">
-                <Icon name="Settings" size={48} className="sm:hidden mx-auto text-gray-300 mb-4" />
-                <Icon name="Settings" size={64} className="hidden sm:block mx-auto text-gray-300 mb-4" />
+                <Icon name="Settings" size={48} className="sm:hidden mx-auto text-muted-foreground mb-4" />
+                <Icon name="Settings" size={64} className="hidden sm:block mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-xl sm:text-2xl font-semibold mb-2">Инструменты разработки</h3>
-                <p className="text-sm sm:text-base text-gray-600 px-4">Редакторы, движки и утилиты</p>
+                <p className="text-sm sm:text-base text-muted-foreground px-4">Редакторы, движки и утилиты</p>
               </div>
             </TabsContent>
           </div>
@@ -478,7 +495,7 @@ const Index = () => {
       <section className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 py-12 md:py-16 mt-12 md:mt-16">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Для разработчиков</h3>
-          <p className="text-base md:text-xl text-gray-600 mb-6 md:mb-8 max-w-2xl mx-auto px-4">
+          <p className="text-base md:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto px-4">
             Загружайте свои проекты, получайте отзывы от сообщества и монетизируйте свою работу
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
@@ -495,43 +512,43 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12 mt-12 md:mt-16">
+      <footer className="bg-card border-t py-8 sm:py-12 mt-12 md:mt-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div className="col-span-2 sm:col-span-1 md:col-span-1">
               <h4 className="text-lg md:text-xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Gaming Library
               </h4>
-              <p className="text-gray-400 text-sm md:text-base">
+              <p className="text-muted-foreground text-sm md:text-base">
                 Платформа для игровых проектов и сообщества разработчиков.
               </p>
             </div>
             <div>
               <h5 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Платформа</h5>
-              <ul className="space-y-1 md:space-y-2 text-gray-400 text-sm md:text-base">
-                <li><a href="#" className="hover:text-white transition-colors">Поиск игр</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Магазин</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Рейтинги</a></li>
+              <ul className="space-y-1 md:space-y-2 text-muted-foreground text-sm md:text-base">
+                <li><a href="/search" className="hover:text-primary transition-colors">Поиск игр</a></li>
+                <li><a href="/store" className="hover:text-primary transition-colors">Магазин</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Рейтинги</a></li>
               </ul>
             </div>
             <div>
               <h5 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Разработчикам</h5>
-              <ul className="space-y-1 md:space-y-2 text-gray-400 text-sm md:text-base">
-                <li><a href="#" className="hover:text-white transition-colors">Загрузить игру</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Аналитика</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Документация</a></li>
+              <ul className="space-y-1 md:space-y-2 text-muted-foreground text-sm md:text-base">
+                <li><a href="/developers" className="hover:text-primary transition-colors">Загрузить игру</a></li>
+                <li><a href="/developers" className="hover:text-primary transition-colors">Аналитика</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Документация</a></li>
               </ul>
             </div>
             <div>
               <h5 className="font-semibold mb-2 md:mb-3 text-sm md:text-base">Поддержка</h5>
-              <ul className="space-y-1 md:space-y-2 text-gray-400 text-sm md:text-base">
-                <li><a href="#" className="hover:text-white transition-colors">Помощь</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Сообщество</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Политика</a></li>
+              <ul className="space-y-1 md:space-y-2 text-muted-foreground text-sm md:text-base">
+                <li><a href="#" className="hover:text-primary transition-colors">Помощь</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Сообщество</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Политика</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-gray-400">
+          <div className="border-t mt-6 md:mt-8 pt-6 md:pt-8 text-center text-muted-foreground">
             <p className="text-sm md:text-base">&copy; 2024 Gaming Library. Все права защищены.</p>
           </div>
         </div>
