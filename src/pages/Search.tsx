@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import Header from '@/components/layout/Header';
 import Icon from '@/components/ui/icon';
 
 const Search = () => {
@@ -55,6 +56,7 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 dark:from-background dark:to-muted/10">
+      <Header currentPage="search" />
       <div className="container mx-auto px-4 py-6 md:py-8">
         {/* Search Header */}
         <div className="mb-6 md:mb-8">

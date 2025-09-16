@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import Header from '@/components/layout/Header';
 import Icon from '@/components/ui/icon';
 
 const Developers = () => {
@@ -55,6 +56,7 @@ const Developers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 dark:from-background dark:to-muted/10">
+      <Header currentPage="developers" />
       <div className="container mx-auto px-4 py-6 md:py-8">
         {/* Header */}
         <div className="mb-8 md:mb-12">

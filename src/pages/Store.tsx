@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Header from '@/components/layout/Header';
 import Icon from '@/components/ui/icon';
 
 const Store = () => {
@@ -65,6 +66,7 @@ const Store = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 dark:from-background dark:to-muted/10">
+      <Header currentPage="store" />
       <div className="container mx-auto px-4 py-6 md:py-8">
         {/* Store Header */}
         <div className="mb-8 md:mb-12">
